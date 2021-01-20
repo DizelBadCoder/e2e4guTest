@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="purple_200">#FFBB86FC</color>
+    <color name="purple_500">#FF6200EE</color>
+    <color name="purple_700">#FF3700B3</color>
+    <color name="teal_200">#FF03DAC5</color>
+    <color name="teal_700">#FF018786</color>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+
+    <color name="soundcloud_3pct">#191212</color>
+    <color name="soundcloud_5pct">#1D1312</color>
+    <color name="soundcloud_10pct">#291511</color>
+    <color name="soundcloud_30pct">#591B0D</color>
+    <color name="soundcloud_38pct">#6C1E0C</color>
+    <color name="soundcloud_50pct">#882209</color>
+    <color name="soundcloud_54pct">#912309</color>
+    <color name="soundcloud_70pct">#B72906</color>
+    <color name="soundcloud_87pct">#E02E03</color>
+    <color name="soundcloud_100pct">#FF3300</color>
+    <color name="soundcloud_light_87pct">#FF4E22</color>
+    <color name="soundcloud_light_70pct">#FF714D</color>
+    <color name="soundcloud_light_54pct">#FF9176</color>
+    <color name="soundcloud_light_50pct">#FF9980</color>
+
+    <color name="background_def">#121212</color>
+</resources>

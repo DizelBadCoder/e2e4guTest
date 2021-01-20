@@ -1,0 +1,9 @@
+<resources>
+    <string name="app_name" translatable="false">Example Map App</string>
+    <string name="mapbox_access_token" translatable="false">pk.eyJ1IjoiZGl6ZWxiYWRjb2RlciIsImEiOiJja2s1ZzV1amowNTE1MnBuNHV4OHU5YzZqIn0.RpiLSs493CTGEW_2BEhLlA</string>
+    <string name="splash_loading">Loading...</string>
+    <string name="dialog_position_life">Real</string>
+    <string name="dialog_position_test">Test</string>
+    <string name="dialog_position_title">My location</string>
+    <string name="dialog_position_label">Which place to show?</string>
+</resources>

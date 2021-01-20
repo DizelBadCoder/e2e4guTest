@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".activities.MapActivity">
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="32dp"
+        android:layout_marginBottom="32dp"
+        android:onClick="showDialogClosedLocate"
+        android:clickable="true"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:maxImageSize="32dp"
+        app:srcCompat="@drawable/ic_baseline_my_location_24" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/floatingActionButton2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="32dp"
+        android:onClick="addMarker"
+        android:clickable="true"
+        app:layout_constraintBottom_toTopOf="@+id/floatingActionButton"
+        app:layout_constraintEnd_toEndOf="@+id/floatingActionButton"
+        app:layout_constraintStart_toStartOf="@+id/floatingActionButton"
+        app:maxImageSize="32dp"
+        app:srcCompat="@drawable/ic_baseline_add_24" />
+
+    <com.mapbox.mapboxsdk.maps.MapView
+        android:id="@+id/mapView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" >
+
+    </com.mapbox.mapboxsdk.maps.MapView>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
