@@ -1,16 +1,15 @@
 package com.e2e4gu.test.activities;
 
-import androidx.annotation.NonNull;
-import androidx.appcompat.app.AppCompatActivity;
-
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.e2e4gu.test.R;
+import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
 
+import com.e2e4gu.test.R;
 import com.e2e4gu.test.retrofit.DatabaseAPI;
 import com.e2e4gu.test.retrofit.RetrofitUtils;
 import com.e2e4gu.test.retrofit.models.Marker;
@@ -45,6 +44,7 @@ public class MapActivity
     private MapboxMap mapboxMap;
     private Location currentLocation;
     private List<Marker> markers = new ArrayList<>();
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,8 +83,8 @@ public class MapActivity
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
             LocationComponentOptions customLocationComponentOptions =
                     LocationComponentOptions.builder(this)
-                    .pulseEnabled(false)
-                    .build();
+                            .pulseEnabled(false)
+                            .build();
 
             LocationComponent locationComponent = mapboxMap.getLocationComponent();
             locationComponent.activateLocationComponent(

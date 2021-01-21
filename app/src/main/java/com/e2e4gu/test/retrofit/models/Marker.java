@@ -10,8 +10,8 @@ public class Marker {
 
     @Expose private String name;
     @Expose private String color;
-    @Expose private double x;
-    @Expose private double y;
+    @Expose private final double x;
+    @Expose private final double y;
 
     public Marker(double x, double y) {
         this.name = DEFAULT_NAME;
