@@ -137,8 +137,10 @@ public class MapActivity
     private void initMarkers() {
         RetrofitUtils.getRetrofit()
                 .create(DatabaseAPI.class)
-                .getMarkerList(currentLocation.getLatitude(),
-                        currentLocation.getLongitude())
+//                TODO release variant
+//                .getMarkerList(currentLocation.getLatitude(),
+//                        currentLocation.getLongitude())
+                .getMarkerList()
                 .enqueue(new Callback<List<Marker>>() {
                     @Override
                     public void onResponse(Call<List<Marker>> call,
