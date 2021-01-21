@@ -61,12 +61,8 @@ public class MapActivity
     @Override
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        mapboxMap.setStyle(new Style.Builder().fromUri(STYLE_URI), new Style.OnStyleLoaded() {
-            @Override
-            public void onStyleLoaded(@NonNull Style style) {
-                enableLocationComponent(style);
-            }
-        });
+        mapboxMap.setStyle(new Style.Builder().fromUri(STYLE_URI),
+                this::enableLocationComponent);
     }
 
     public void addMarker(View view) {
@@ -118,12 +114,7 @@ public class MapActivity
     @Override
     public void onPermissionResult(boolean granted) {
         if (granted) {
-            mapboxMap.getStyle(new Style.OnStyleLoaded() {
-                @Override
-                public void onStyleLoaded(@NonNull Style style) {
-                    enableLocationComponent(style);
-                }
-            });
+            mapboxMap.getStyle(this::enableLocationComponent);
         } else {
             Toast.makeText(this, "Not granted", Toast.LENGTH_LONG).show();
         }
