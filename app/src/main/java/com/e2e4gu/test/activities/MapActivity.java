@@ -41,7 +41,6 @@ public class MapActivity
 
     private TextView textViewDebug;
     private PermissionsManager permissionsManager;
-    private Style fullyLoadedStyleMap;
     private MapView mapView;
     private MapboxMap mapboxMap;
     private Location currentLocation;
@@ -65,8 +64,7 @@ public class MapActivity
         mapboxMap.setStyle(new Style.Builder().fromUri(STYLE_URI), new Style.OnStyleLoaded() {
             @Override
             public void onStyleLoaded(@NonNull Style style) {
-                fullyLoadedStyleMap = style;
-                checkMyLocation(null);
+                enableLocationComponent(style);
             }
         });
     }
@@ -77,12 +75,15 @@ public class MapActivity
     }
 
     public void checkMyLocation(View view) {
-        if (fullyLoadedStyleMap != null)
-            enableLocationComponent();
+        if (currentLocation != null) {
+            moveCameraToMyLocation();
+        } else {
+            requestLocationPermission();
+        }
     }
 
     @SuppressWarnings({"MissingPermission"})
-    private void enableLocationComponent() {
+    private void enableLocationComponent(@NonNull Style style) {
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
             LocationComponentOptions customLocationComponentOptions =
                     LocationComponentOptions.builder(this)
@@ -92,15 +93,14 @@ public class MapActivity
             LocationComponent locationComponent = mapboxMap.getLocationComponent();
             locationComponent.activateLocationComponent(
                     LocationComponentActivationOptions
-                            .builder(this, fullyLoadedStyleMap)
+                            .builder(this, style)
                             .locationComponentOptions(customLocationComponentOptions)
                             .build());
             locationComponent.setLocationComponentEnabled(true);
             currentLocation = locationComponent.getLastKnownLocation();
             moveCameraToMyLocation();
         } else {
-            permissionsManager = new PermissionsManager(this);
-            permissionsManager.requestLocationPermissions(this);
+            requestLocationPermission();
         }
     }
 
@@ -121,7 +121,7 @@ public class MapActivity
             mapboxMap.getStyle(new Style.OnStyleLoaded() {
                 @Override
                 public void onStyleLoaded(@NonNull Style style) {
-                    enableLocationComponent();
+                    enableLocationComponent(style);
                 }
             });
         } else {
@@ -136,6 +136,11 @@ public class MapActivity
                             currentLocation.getLongitude(),
                             currentLocation.getAltitude()), 15), 1200);
         }
+    }
+
+    private void requestLocationPermission() {
+        permissionsManager = new PermissionsManager(this);
+        permissionsManager.requestLocationPermissions(this);
     }
 
     private void initMarkers() {
