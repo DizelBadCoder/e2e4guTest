@@ -10,24 +10,24 @@ public class Marker {
 
     @Expose private String name;
     @Expose private String color;
-    @Expose private final float x;
-    @Expose private final float y;
+    @Expose private double x;
+    @Expose private double y;
 
-    public Marker(float x, float y) {
+    public Marker(double x, double y) {
         this.name = DEFAULT_NAME;
         this.color = DEFAULT_COLOR;
         this.x = x;
         this.y = y;
     }
 
-    public Marker(float x, float y, String name) {
+    public Marker(double x, double y, String name) {
         this.name = name;
         this.color = DEFAULT_COLOR;
         this.x = x;
         this.y = y;
     }
 
-    public Marker(float x, float y, String name, String color) {
+    public Marker(double x, double y, String name, String color) {
         this.name = name;
         this.color = color;
         this.x = x;
@@ -50,11 +50,11 @@ public class Marker {
         this.color = color;
     }
 
-    public float getX() {
+    public double getX() {
         return x;
     }
 
-    public float getY() {
+    public double getY() {
         return y;
     }
 

@@ -9,5 +9,5 @@ import retrofit2.http.Query;
 
 public interface DatabaseAPI {
     @GET("markers")
-    Call<List<Marker>> getMarkerList(@Query("x") float x, @Query("y") float y);
+    Call<List<Marker>> getMarkerList(@Query("x") double x, @Query("y") double y);
 }
