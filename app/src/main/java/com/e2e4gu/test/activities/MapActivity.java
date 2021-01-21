@@ -5,7 +5,6 @@ import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -31,6 +30,7 @@ import com.mapbox.mapboxsdk.maps.Style;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -58,7 +58,6 @@ public class MapActivity
         mapView = findViewById(R.id.mapView);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
-        //TODO release textview debug
     }
 
     @Override
@@ -69,7 +68,6 @@ public class MapActivity
     }
 
     public void addMarker(View view) {
-        //TODO
         Toast.makeText(this, "Developing...", Toast.LENGTH_LONG).show();
     }
 
@@ -159,6 +157,28 @@ public class MapActivity
 
                     @Override
                     public void onFailure(Call<List<Marker>> call, Throwable t) {
+                        Toast.makeText(MapActivity.this, t.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                        t.printStackTrace();
+                    }
+                });
+    }
+
+    private void postNewMarker(Marker marker) {
+        RetrofitUtils.getRetrofit()
+                .create(DatabaseAPI.class)
+                .newMarker(marker)
+                .enqueue(new Callback<ResponseBody>() {
+                    @Override
+                    public void onResponse(Call<ResponseBody> call,
+                                           Response<ResponseBody> response) {
+                        if (response.isSuccessful())
+                            Toast.makeText(MapActivity.this, "Succesful!",
+                                    Toast.LENGTH_LONG).show();
+                    }
+
+                    @Override
+                    public void onFailure(Call<ResponseBody> call, Throwable t) {
                         Toast.makeText(MapActivity.this, t.getMessage(),
                                 Toast.LENGTH_LONG).show();
                         t.printStackTrace();
