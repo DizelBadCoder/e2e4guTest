@@ -97,6 +97,11 @@ public class MapActivity
                             .builder(this, style)
                             .locationComponentOptions(customLocationComponentOptions)
                             .build());
+
+            mapboxMap.getUiSettings().setCompassEnabled(false);
+            mapboxMap.getUiSettings().setAttributionEnabled(false);
+            mapboxMap.getUiSettings().setLogoEnabled(false);
+
             locationComponent.setLocationComponentEnabled(true);
             currentLocation = locationComponent.getLastKnownLocation();
             moveCameraToMyLocation();
