@@ -3,7 +3,6 @@ package com.e2e4gu.test.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
-import android.graphics.Camera;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
@@ -18,7 +17,6 @@ import com.e2e4gu.test.retrofit.models.Marker;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.mapboxsdk.Mapbox;
-import com.mapbox.mapboxsdk.camera.CameraUpdate;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -47,6 +45,7 @@ public class MapActivity
     private MapView mapView;
     private MapboxMap mapboxMap;
     private Location currentLocation;
+    private List<Marker> markers = new ArrayList<>();
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -73,7 +72,7 @@ public class MapActivity
     }
 
     public void addMarker(View view) {
-        //TODO 
+        //TODO
         Toast.makeText(this, "Developing...", Toast.LENGTH_LONG).show();
     }
 
@@ -137,6 +136,28 @@ public class MapActivity
                             currentLocation.getLongitude(),
                             currentLocation.getAltitude()), 15), 1200);
         }
+    }
+
+    private void initMarkers() {
+        RetrofitUtils.getRetrofit()
+                .create(DatabaseAPI.class)
+                .getMarkerList(currentLocation.getLatitude(),
+                        currentLocation.getLongitude())
+                .enqueue(new Callback<List<Marker>>() {
+                    @Override
+                    public void onResponse(Call<List<Marker>> call,
+                                           Response<List<Marker>> response) {
+                        if (response.isSuccessful())
+                            markers = response.body();
+                    }
+
+                    @Override
+                    public void onFailure(Call<List<Marker>> call, Throwable t) {
+                        Toast.makeText(MapActivity.this, t.getMessage(),
+                                Toast.LENGTH_LONG).show();
+                        t.printStackTrace();
+                    }
+                });
     }
 
     @Override
