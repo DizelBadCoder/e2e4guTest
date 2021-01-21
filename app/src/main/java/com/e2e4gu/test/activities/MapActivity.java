@@ -40,7 +40,6 @@ public class MapActivity
         implements OnMapReadyCallback, PermissionsListener {
     private final String STYLE_URI = "mapbox://styles/dizelbadcoder/ckk5g8f991k4g17qqdj6bls5q";
 
-    private TextView textViewDebug;
     private PermissionsManager permissionsManager;
     private MapView mapView;
     private MapboxMap mapboxMap;
@@ -57,7 +56,6 @@ public class MapActivity
                 getResources().getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_map);
         mapView = findViewById(R.id.mapView);
-        textViewDebug = findViewById(R.id.textViewDebug);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
         //TODO release textview debug

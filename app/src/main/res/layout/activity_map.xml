@@ -20,18 +20,6 @@
 
     </com.mapbox.mapboxsdk.maps.MapView>
 
-    <TextView
-        android:id="@+id/textViewDebug"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="Debug Text"
-        android:textColor="@color/soundcloud_light_50pct"
-        android:layout_margin="8dp"
-        android:fontFamily="@font/exo_2_light"
-        android:textSize="16sp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/floatingActionButton"
         android:layout_width="wrap_content"
