@@ -1,8 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="splash_loading">Загрузка...</string>
-    <string name="dialog_position_life">Реальное</string>
-    <string name="dialog_position_test">Тестовое</string>
-    <string name="dialog_position_title">Местоположение</string>
-    <string name="dialog_position_label">Какое место показывать?</string>
 </resources>

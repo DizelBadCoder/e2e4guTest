@@ -71,17 +71,8 @@ public class MapActivity
         Toast.makeText(this, "Developing...", Toast.LENGTH_LONG).show();
     }
 
-    public void showDialogClosedLocate(View view) {
-        new AlertDialog.Builder(this)
-            .setTitle(R.string.dialog_position_title)
-            .setMessage(R.string.dialog_position_label)
-            .setPositiveButton(R.string.dialog_position_life, (dialog, which) -> {
-                enableLocationComponent();
-            })
-            .setNegativeButton(R.string.dialog_position_test, (dialog, which) -> {
-
-            })
-            .show();
+    public void checkMyLocation(View view) {
+        enableLocationComponent();
     }
 
     @SuppressWarnings({"MissingPermission"})
@@ -127,7 +118,6 @@ public class MapActivity
             });
         } else {
             Toast.makeText(this, "Not granted", Toast.LENGTH_LONG).show();
-            finish();
         }
     }
 
