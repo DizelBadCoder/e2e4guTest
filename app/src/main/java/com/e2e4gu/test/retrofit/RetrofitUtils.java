@@ -5,7 +5,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitUtils {
     private static final String BASE_URL =
-            "https://my-json-server.typicode.com/DizelBadCoder/e2e4gu-rest/";
+            "https://my-json-server.typicode.com/DizelBadCoder/e2e4guTest/";
 
     public static Retrofit getRetrofit() {
         return new Retrofit.Builder()
