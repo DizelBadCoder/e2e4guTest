@@ -26,6 +26,7 @@ import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.location.LocationComponentOptions;
+import com.mapbox.mapboxsdk.location.OnLocationStaleListener;
 import com.mapbox.mapboxsdk.location.modes.CameraMode;
 import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
@@ -116,8 +117,8 @@ public class MapActivity
             locationComponent.setLocationComponentEnabled(true);
             locationComponent.setCameraMode(CameraMode.TRACKING);
             locationComponent.setRenderMode(RenderMode.NORMAL);
-
-            currentLocation = locationComponent.getLastKnownLocation();
+            locationComponent.addOnLocationStaleListener(isStale ->
+                    currentLocation = locationComponent.getLastKnownLocation());
             initMarkers(style);
             moveCameraToMyLocation();
         } else {
@@ -150,7 +151,7 @@ public class MapActivity
             mapboxMap.animateCamera(CameraUpdateFactory.newLatLngZoom(
                     new LatLng(currentLocation.getLatitude(),
                             currentLocation.getLongitude(),
-                            currentLocation.getAltitude()), 15), 1200);
+                            currentLocation.getAltitude()), 12), 1400);
         }
     }
 
