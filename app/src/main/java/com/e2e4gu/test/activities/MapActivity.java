@@ -37,11 +37,13 @@ import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 
 import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+import retrofit2.internal.EverythingIsNonNull;
 
 import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_BOTTOM;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
@@ -52,7 +54,6 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 public class MapActivity
         extends AppCompatActivity
         implements OnMapReadyCallback, PermissionsListener {
-    private final String STYLE_URI = "mapbox://styles/dizelbadcoder/ckk5g8f991k4g17qqdj6bls5q";
 
     private PermissionsManager permissionsManager;
     private MapView mapView;
@@ -76,6 +77,7 @@ public class MapActivity
     @Override
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
+        String STYLE_URI = "mapbox://styles/dizelbadcoder/ckk5g8f991k4g17qqdj6bls5q";
         mapboxMap.setStyle(new Style.Builder().fromUri(STYLE_URI),
                 this::enableLocationComponent);
     }
@@ -165,10 +167,12 @@ public class MapActivity
 //                        currentLocation.getLongitude())
                 .getMarkerList()
                 .enqueue(new Callback<List<Marker>>() {
+                    @EverythingIsNonNull
                     @Override
                     public void onResponse(Call<List<Marker>> call,
                                            Response<List<Marker>> response) {
                         if (response.isSuccessful()) {
+                            if (response.body() == null) return;
                             List<Marker> markers = response.body();
                             List<Feature> features = new ArrayList<>();
 
@@ -179,11 +183,11 @@ public class MapActivity
                             }
 
                             style.addImage("MARKER",
-                                    ResourcesCompat.getDrawable(
+                                    Objects.requireNonNull(ResourcesCompat.getDrawable(
                                             getResources(),
                                             R.drawable.ic_baseline_location_on_24,
                                             null
-                                    ));
+                                    )));
                             style.addSource(new GeoJsonSource("SOURCE",
                                     FeatureCollection.fromFeatures(features)));
                             style.addLayer(new SymbolLayer("LAYER", "SOURCE")
@@ -195,6 +199,7 @@ public class MapActivity
                         }
                     }
 
+                    @EverythingIsNonNull
                     @Override
                     public void onFailure(Call<List<Marker>> call, Throwable t) {
                         Toast.makeText(MapActivity.this, t.getMessage(),
@@ -209,6 +214,7 @@ public class MapActivity
                 .create(DatabaseAPI.class)
                 .newMarker(marker)
                 .enqueue(new Callback<ResponseBody>() {
+                    @EverythingIsNonNull
                     @Override
                     public void onResponse(Call<ResponseBody> call,
                                            Response<ResponseBody> response) {
@@ -219,6 +225,7 @@ public class MapActivity
 
                     }
 
+                    @EverythingIsNonNull
                     @Override
                     public void onFailure(Call<ResponseBody> call, Throwable t) {
                         Toast.makeText(MapActivity.this, t.getMessage(),
@@ -253,7 +260,7 @@ public class MapActivity
     }
 
     @Override
-    protected void onSaveInstanceState(Bundle outState) {
+    protected void onSaveInstanceState(@NonNull Bundle outState) {
         super.onSaveInstanceState(outState);
         mapView.onSaveInstanceState(outState);
     }
