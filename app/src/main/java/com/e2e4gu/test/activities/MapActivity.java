@@ -172,9 +172,11 @@ public class MapActivity
                     @Override
                     public void onResponse(Call<ResponseBody> call,
                                            Response<ResponseBody> response) {
-                        if (response.isSuccessful())
-                            Toast.makeText(MapActivity.this, "Succesful!",
+                        if (response.isSuccessful()) {
+                            Toast.makeText(MapActivity.this, R.string.toast_successful,
                                     Toast.LENGTH_LONG).show();
+                        }
+
                     }
 
                     @Override
