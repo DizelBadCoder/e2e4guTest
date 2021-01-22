@@ -9,6 +9,7 @@ import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.res.ResourcesCompat;
 
 import com.e2e4gu.test.R;
 import com.e2e4gu.test.retrofit.DatabaseAPI;
@@ -16,16 +17,23 @@ import com.e2e4gu.test.retrofit.RetrofitUtils;
 import com.e2e4gu.test.retrofit.models.Marker;
 import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
+import com.mapbox.geojson.Feature;
+import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.Point;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
 import com.mapbox.mapboxsdk.location.LocationComponentActivationOptions;
 import com.mapbox.mapboxsdk.location.LocationComponentOptions;
+import com.mapbox.mapboxsdk.location.modes.CameraMode;
+import com.mapbox.mapboxsdk.location.modes.RenderMode;
 import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
+import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -34,6 +42,12 @@ import okhttp3.ResponseBody;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
+
+import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_BOTTOM;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 
 public class MapActivity
         extends AppCompatActivity
@@ -44,7 +58,6 @@ public class MapActivity
     private MapView mapView;
     private MapboxMap mapboxMap;
     private Location currentLocation;
-    private List<Marker> markers = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -99,7 +112,11 @@ public class MapActivity
             mapboxMap.getUiSettings().setLogoEnabled(false);
 
             locationComponent.setLocationComponentEnabled(true);
+            locationComponent.setCameraMode(CameraMode.TRACKING);
+            locationComponent.setRenderMode(RenderMode.NORMAL);
+
             currentLocation = locationComponent.getLastKnownLocation();
+            initMarkers(style);
             moveCameraToMyLocation();
         } else {
             requestLocationPermission();
@@ -140,7 +157,7 @@ public class MapActivity
         permissionsManager.requestLocationPermissions(this);
     }
 
-    private void initMarkers() {
+    private void initMarkers(@NonNull Style style) {
         RetrofitUtils.getRetrofit()
                 .create(DatabaseAPI.class)
 //                TODO release variant
@@ -151,8 +168,31 @@ public class MapActivity
                     @Override
                     public void onResponse(Call<List<Marker>> call,
                                            Response<List<Marker>> response) {
-                        if (response.isSuccessful())
-                            markers = response.body();
+                        if (response.isSuccessful()) {
+                            List<Marker> markers = response.body();
+                            List<Feature> features = new ArrayList<>();
+
+                            for (Marker it : markers) {
+                                features.add(Feature.fromGeometry(
+                                        Point.fromLngLat(it.getY(), it.getX())
+                                ));
+                            }
+
+                            style.addImage("MARKER",
+                                    ResourcesCompat.getDrawable(
+                                            getResources(),
+                                            R.drawable.ic_baseline_location_on_24,
+                                            null
+                                    ));
+                            style.addSource(new GeoJsonSource("SOURCE",
+                                    FeatureCollection.fromFeatures(features)));
+                            style.addLayer(new SymbolLayer("LAYER", "SOURCE")
+                                    .withProperties(
+                                            iconImage("MARKER"),
+                                            iconAllowOverlap(true),
+                                            iconIgnorePlacement(true),
+                                            iconAnchor(ICON_ANCHOR_BOTTOM)));
+                        }
                     }
 
                     @Override
