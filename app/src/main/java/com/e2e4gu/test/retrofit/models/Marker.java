@@ -10,28 +10,28 @@ public class Marker {
 
     @Expose private String name;
     @Expose private String color;
-    @Expose private final double x;
-    @Expose private final double y;
+    @Expose private final double lng;
+    @Expose private final double lat;
 
-    public Marker(double x, double y) {
+    public Marker(double lng, double lat) {
         this.name = DEFAULT_NAME;
         this.color = DEFAULT_COLOR;
-        this.x = x;
-        this.y = y;
+        this.lng = lng;
+        this.lat = lat;
     }
 
-    public Marker(double x, double y, String name) {
+    public Marker(double lng, double lat, String name) {
         this.name = name;
         this.color = DEFAULT_COLOR;
-        this.x = x;
-        this.y = y;
+        this.lng = lng;
+        this.lat = lat;
     }
 
-    public Marker(double x, double y, String name, String color) {
+    public Marker(double lng, double lat, String name, String color) {
         this.name = name;
         this.color = color;
-        this.x = x;
-        this.y = y;
+        this.lng = lng;
+        this.lat = lat;
     }
 
     public String getName() {
@@ -50,12 +50,12 @@ public class Marker {
         this.color = color;
     }
 
-    public double getX() {
-        return x;
+    public double getLng() {
+        return lng;
     }
 
-    public double getY() {
-        return y;
+    public double getLat() {
+        return lat;
     }
 
     @NonNull
@@ -63,7 +63,7 @@ public class Marker {
     public String toString() {
         return "Name : " + name +
                 "\nColor : " + color +
-                "\nX : " + x +
-                "\nY : " + y + "\n";
+                "\nLng : " + lng +
+                "\nLat : " + lat + "\n";
     }
 }

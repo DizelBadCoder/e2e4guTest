@@ -174,7 +174,7 @@ public class MapActivity
 
                             for (Marker it : markers) {
                                 features.add(Feature.fromGeometry(
-                                        Point.fromLngLat(it.getY(), it.getX())
+                                        Point.fromLngLat(it.getLng(), it.getLat())
                                 ));
                             }
 

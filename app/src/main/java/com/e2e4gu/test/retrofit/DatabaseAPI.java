@@ -13,7 +13,7 @@ import retrofit2.http.POST;
 public interface DatabaseAPI {
     //TODO release variant
 //    @GET("markers")
-//    Call<List<Marker>> getMarkerList(@Query("x") double x, @Query("y") double y);
+//    Call<List<Marker>> getMarkerList(@Query("lat") double lat, @Query("lng") double lng);
 
     @GET("markers")
     Call<List<Marker>> getMarkerList();
