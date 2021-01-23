@@ -149,27 +149,17 @@ public class MapActivity
         TextView textViewError = dialog.findViewById(R.id.textview_error);
         textViewError.setVisibility(View.INVISIBLE);
         EditText editTextName = dialog.findViewById(R.id.edittext_name);
-        EditText editTextColor = dialog.findViewById(R.id.edittext_color);
         Button btnOk = dialog.findViewById(R.id.btn_ok);
         btnOk.setOnClickListener(v -> {
-            if (editTextName.getText().toString().trim().isEmpty() ||
-                    editTextColor.getText().toString().trim().isEmpty()) {
+            if (editTextName.getText().toString().trim().isEmpty()) {
                 textViewError.setVisibility(View.VISIBLE);
                 textViewError.setText(R.string.error_empty_edittext);
             } else {
-                try {
-                    String color = editTextColor.getText().toString();
-                    Color.parseColor(color); // check to exception
-                    Marker marker = new Marker(latLng.getLongitude(), latLng.getLatitude());
-                    marker.setColor(color);
-                    marker.setName(editTextName.getText().toString());
-                    postNewMarker(marker);
-                    dialog.cancel();
-                } catch (IllegalArgumentException e) {
-                    textViewError.setVisibility(View.VISIBLE);
-                    textViewError.setText(R.string.error_not_color);
-                    e.printStackTrace();
-                }
+                Marker marker = new Marker(latLng.getLongitude(),
+                        latLng.getLatitude(),
+                        editTextName.getText().toString());
+                postNewMarker(marker);
+                dialog.cancel();
             }
         });
         dialog.show();
