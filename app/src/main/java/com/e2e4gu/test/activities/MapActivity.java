@@ -66,6 +66,9 @@ public class MapActivity
         extends AppCompatActivity
         implements OnMapReadyCallback, PermissionsListener, MapboxMap.OnCameraMoveListener {
 
+    private final String CURRENT_LOCATION_SOURCE_ID = "CURRENT_LOCATION_SOURCE_ID";
+    private final String FILL_LAYER_ID = "FILL_LAYER_ID";
+
     private PermissionsManager permissionsManager;
     private MapView mapView;
     private MapboxMap mapboxMap;
@@ -92,10 +95,10 @@ public class MapActivity
         this.mapboxMap = mapboxMap;
         String STYLE_URI = "mapbox://styles/dizelbadcoder/ckk5g8f991k4g17qqdj6bls5q";
         mapboxMap.setStyle(new Style.Builder().fromUri(STYLE_URI), style -> {
-            style.addSource(new GeoJsonSource("CURRENT_LOCATION_SOURCE_ID"));
+            style.addSource(new GeoJsonSource(CURRENT_LOCATION_SOURCE_ID));
 
-            FillLayer fillLayer = new FillLayer("FILL_LAYER_ID",
-                    "CURRENT_LOCATION_SOURCE_ID");
+            FillLayer fillLayer = new FillLayer(FILL_LAYER_ID,
+                    CURRENT_LOCATION_SOURCE_ID);
             fillLayer.setProperties(
                     fillColor(getResources().getColor(R.color.soundcloud_50pct)),
                     fillOpacity(.3f));
@@ -147,7 +150,7 @@ public class MapActivity
                 Polygon polygonArea = TurfTransformation.circle(
                         locationToPoint(currentLocation), 10000, 360,
                         TurfConstants.UNIT_METERS);
-                GeoJsonSource polygonCircleSource = style.getSourceAs("CURRENT_LOCATION_SOURCE_ID");
+                GeoJsonSource polygonCircleSource = style.getSourceAs(CURRENT_LOCATION_SOURCE_ID);
                 polygonCircleSource.setGeoJson(Polygon.fromOuterInner(
                         LineString.fromLngLats(TurfMeta.coordAll(polygonArea, false))));
 
