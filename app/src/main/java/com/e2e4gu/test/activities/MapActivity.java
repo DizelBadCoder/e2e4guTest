@@ -69,6 +69,9 @@ public class MapActivity
 
     private final String CURRENT_LOCATION_SOURCE_ID = "CURRENT_LOCATION_SOURCE_ID";
     private final String FILL_LAYER_ID = "FILL_LAYER_ID";
+    private final String MARKER = "MARKER";
+    private final String SOURCE_MARKER = "SOURCE_MARKER";
+    private final String LAYER_MARKER = "LAYER_MARKER";
 
     private PermissionsManager permissionsManager;
     private MapView mapView;
@@ -237,17 +240,17 @@ public class MapActivity
                                 ));
                             }
 
-                            style.addImage("MARKER",
+                            style.addImage(MARKER,
                                     Objects.requireNonNull(ResourcesCompat.getDrawable(
                                             getResources(),
                                             R.drawable.ic_baseline_location_on_24,
                                             null
                                     )));
-                            style.addSource(new GeoJsonSource("SOURCE_MARKER",
+                            style.addSource(new GeoJsonSource(SOURCE_MARKER,
                                     FeatureCollection.fromFeatures(features)));
-                            style.addLayer(new SymbolLayer("LAYER_MARKER",
-                                    "SOURCE_MARKER").withProperties(
-                                            iconImage("MARKER"),
+                            style.addLayer(new SymbolLayer(LAYER_MARKER,
+                                    SOURCE_MARKER).withProperties(
+                                            iconImage(MARKER),
                                             iconAllowOverlap(true),
                                             iconIgnorePlacement(true),
                                             iconAnchor(ICON_ANCHOR_BOTTOM)));
