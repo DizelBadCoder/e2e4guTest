@@ -185,6 +185,10 @@ public class MapActivity
                             List<Feature> features = new ArrayList<>();
 
                             for (Marker it : markers) {
+                                Location location = new Location((String) null);
+                                location.setLongitude(it.getLng());
+                                location.setLatitude(it.getLat());
+                                if (currentLocation.distanceTo(location) > 10000) continue;
                                 features.add(Feature.fromGeometry(
                                         Point.fromLngLat(it.getLng(), it.getLat())
                                 ));
