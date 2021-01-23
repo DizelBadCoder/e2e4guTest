@@ -200,10 +200,10 @@ public class MapActivity
                                             R.drawable.ic_baseline_location_on_24,
                                             null
                                     )));
-                            style.addSource(new GeoJsonSource("SOURCE",
+                            style.addSource(new GeoJsonSource("SOURCE_MARKER",
                                     FeatureCollection.fromFeatures(features)));
-                            style.addLayer(new SymbolLayer("LAYER", "SOURCE")
-                                    .withProperties(
+                            style.addLayer(new SymbolLayer("LAYER_MARKER",
+                                    "SOURCE_MARKER").withProperties(
                                             iconImage("MARKER"),
                                             iconAllowOverlap(true),
                                             iconIgnorePlacement(true),
