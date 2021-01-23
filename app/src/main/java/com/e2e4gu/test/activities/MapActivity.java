@@ -25,6 +25,7 @@ import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
 import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.Mapbox;
+import com.mapbox.mapboxsdk.camera.CameraPosition;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
 import com.mapbox.mapboxsdk.location.LocationComponent;
@@ -153,7 +154,8 @@ public class MapActivity
                         TurfConstants.UNIT_METERS);
                 GeoJsonSource polygonCircleSource = style.getSourceAs(CURRENT_LOCATION_SOURCE_ID);
                 polygonCircleSource.setGeoJson(Polygon.fromOuterInner(
-                        LineString.fromLngLats(TurfMeta.coordAll(polygonArea, false))));
+                        LineString.fromLngLats(
+                                TurfMeta.coordAll(polygonArea, false))));
 
                 initMarkers(style);
                 moveCameraToMyLocation();
@@ -293,11 +295,12 @@ public class MapActivity
     @Override
     public void onCameraMove() {
         if (isDebug) {
-            textViewDebug.setText("Lng: " + mapboxMap.getCameraPosition().target.getLongitude() +
-                    "\nLat: " + mapboxMap.getCameraPosition().target.getLatitude() +
-                    "\nZoom: " + mapboxMap.getCameraPosition().zoom +
-                    "\nBearing: " + mapboxMap.getCameraPosition().bearing +
-                    "\nTilt: " + mapboxMap.getCameraPosition().tilt
+            CameraPosition position = mapboxMap.getCameraPosition();
+            textViewDebug.setText("Lng: " + position.target.getLongitude() +
+                    "\nLat: " + position.target.getLatitude() +
+                    "\nZoom: " + position.zoom +
+                    "\nBearing: " + position.bearing +
+                    "\nTilt: " + position.tilt
             );
         }
     }
