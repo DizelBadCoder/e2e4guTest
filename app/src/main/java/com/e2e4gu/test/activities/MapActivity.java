@@ -1,10 +1,12 @@
 package com.e2e4gu.test.activities;
 
+import android.annotation.SuppressLint;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -54,12 +56,13 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 
 public class MapActivity
         extends AppCompatActivity
-        implements OnMapReadyCallback, PermissionsListener {
+        implements OnMapReadyCallback, PermissionsListener, MapboxMap.OnCameraMoveListener {
 
     private PermissionsManager permissionsManager;
     private MapView mapView;
     private MapboxMap mapboxMap;
     private Location currentLocation;
+    private TextView textViewDebug;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -71,6 +74,7 @@ public class MapActivity
                 getResources().getString(R.string.mapbox_access_token));
         setContentView(R.layout.activity_map);
         mapView = findViewById(R.id.mapView);
+        textViewDebug = findViewById(R.id.textViewDebug);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
@@ -79,8 +83,10 @@ public class MapActivity
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
         String STYLE_URI = "mapbox://styles/dizelbadcoder/ckk5g8f991k4g17qqdj6bls5q";
-        mapboxMap.setStyle(new Style.Builder().fromUri(STYLE_URI),
-                this::enableLocationComponent);
+        mapboxMap.setStyle(new Style.Builder().fromUri(STYLE_URI), style -> {
+            enableLocationComponent(style);
+            mapboxMap.addOnCameraMoveListener(this);
+        });
     }
 
     public void addMarker(View view) {
@@ -245,6 +251,17 @@ public class MapActivity
                         t.printStackTrace();
                     }
                 });
+    }
+
+    @SuppressLint("SetTextI18n")
+    @Override
+    public void onCameraMove() {
+        textViewDebug.setText("Lng: " + mapboxMap.getCameraPosition().target.getLongitude() +
+                "\nLat: " + mapboxMap.getCameraPosition().target.getLatitude() +
+                "\nZoom: " + mapboxMap.getCameraPosition().zoom +
+                "\nBearing: " + mapboxMap.getCameraPosition().bearing +
+                "\nTilt: " + mapboxMap.getCameraPosition().tilt
+        );
     }
 
     @Override

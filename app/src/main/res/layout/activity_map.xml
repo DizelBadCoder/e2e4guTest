@@ -46,5 +46,18 @@
         app:maxImageSize="32dp"
         app:srcCompat="@drawable/ic_baseline_add_24" />
 
+    <TextView
+        android:id="@+id/textViewDebug"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Debug Text"
+        android:textSize="16sp"
+        android:fontFamily="@font/exo_2_light"
+        android:textColor="@color/soundcloud_87pct"
+        android:layout_marginTop="50dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
