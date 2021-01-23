@@ -74,6 +74,7 @@ public class MapActivity
     private MapboxMap mapboxMap;
     private Location currentLocation;
     private TextView textViewDebug;
+    private boolean isDebug = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -291,12 +292,14 @@ public class MapActivity
     @SuppressLint("SetTextI18n")
     @Override
     public void onCameraMove() {
-        textViewDebug.setText("Lng: " + mapboxMap.getCameraPosition().target.getLongitude() +
-                "\nLat: " + mapboxMap.getCameraPosition().target.getLatitude() +
-                "\nZoom: " + mapboxMap.getCameraPosition().zoom +
-                "\nBearing: " + mapboxMap.getCameraPosition().bearing +
-                "\nTilt: " + mapboxMap.getCameraPosition().tilt
-        );
+        if (isDebug) {
+            textViewDebug.setText("Lng: " + mapboxMap.getCameraPosition().target.getLongitude() +
+                    "\nLat: " + mapboxMap.getCameraPosition().target.getLatitude() +
+                    "\nZoom: " + mapboxMap.getCameraPosition().zoom +
+                    "\nBearing: " + mapboxMap.getCameraPosition().bearing +
+                    "\nTilt: " + mapboxMap.getCameraPosition().tilt
+            );
+        }
     }
 
     @Override
