@@ -117,10 +117,17 @@ public class MapActivity
             locationComponent.setLocationComponentEnabled(true);
             locationComponent.setCameraMode(CameraMode.TRACKING);
             locationComponent.setRenderMode(RenderMode.NORMAL);
-            locationComponent.addOnLocationStaleListener(isStale ->
-                    currentLocation = locationComponent.getLastKnownLocation());
-            initMarkers(style);
-            moveCameraToMyLocation();
+
+            currentLocation = locationComponent.getLastKnownLocation();
+            if (currentLocation != null) {
+                initMarkers(style);
+                moveCameraToMyLocation();
+                locationComponent.addOnIndicatorPositionChangedListener(indicator -> {
+                    //update current position
+                    currentLocation = locationComponent.getLastKnownLocation();
+
+                });
+            }
         } else {
             requestLocationPermission();
         }
