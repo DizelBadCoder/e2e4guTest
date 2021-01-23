@@ -52,8 +52,6 @@
         android:layout_height="wrap_content"
         android:text="Debug Text"
         android:textSize="16sp"
-        android:fontFamily="@font/exo_2_light"
-        android:textColor="@color/soundcloud_87pct"
         android:layout_marginTop="50dp"
         android:layout_marginStart="16dp"
         app:layout_constraintStart_toStartOf="parent"

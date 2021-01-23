@@ -12,5 +12,7 @@
         <!-- Status bar color. -->
         <item name="android:statusBarColor" tools:targetApi="l">@color/background_def</item>
         <!-- Customize your theme here. -->
+        <item name="android:fontFamily">@font/exo_2_light</item>
+        <item name="android:textColor">@color/soundcloud_87pct</item>
     </style>
 </resources>
