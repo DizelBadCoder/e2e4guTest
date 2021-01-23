@@ -21,7 +21,9 @@ import com.mapbox.android.core.permissions.PermissionsListener;
 import com.mapbox.android.core.permissions.PermissionsManager;
 import com.mapbox.geojson.Feature;
 import com.mapbox.geojson.FeatureCollection;
+import com.mapbox.geojson.LineString;
 import com.mapbox.geojson.Point;
+import com.mapbox.geojson.Polygon;
 import com.mapbox.mapboxsdk.Mapbox;
 import com.mapbox.mapboxsdk.camera.CameraUpdateFactory;
 import com.mapbox.mapboxsdk.geometry.LatLng;
@@ -35,8 +37,12 @@ import com.mapbox.mapboxsdk.maps.MapView;
 import com.mapbox.mapboxsdk.maps.MapboxMap;
 import com.mapbox.mapboxsdk.maps.OnMapReadyCallback;
 import com.mapbox.mapboxsdk.maps.Style;
+import com.mapbox.mapboxsdk.style.layers.FillLayer;
 import com.mapbox.mapboxsdk.style.layers.SymbolLayer;
 import com.mapbox.mapboxsdk.style.sources.GeoJsonSource;
+import com.mapbox.turf.TurfConstants;
+import com.mapbox.turf.TurfMeta;
+import com.mapbox.turf.TurfTransformation;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -49,6 +55,8 @@ import retrofit2.Response;
 import retrofit2.internal.EverythingIsNonNull;
 
 import static com.mapbox.mapboxsdk.style.layers.Property.ICON_ANCHOR_BOTTOM;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillColor;
+import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.fillOpacity;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAllowOverlap;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconAnchor;
 import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconIgnorePlacement;
@@ -84,6 +92,15 @@ public class MapActivity
         this.mapboxMap = mapboxMap;
         String STYLE_URI = "mapbox://styles/dizelbadcoder/ckk5g8f991k4g17qqdj6bls5q";
         mapboxMap.setStyle(new Style.Builder().fromUri(STYLE_URI), style -> {
+            style.addSource(new GeoJsonSource("CURRENT_LOCATION_SOURCE_ID"));
+
+            FillLayer fillLayer = new FillLayer("FILL_LAYER_ID",
+                    "CURRENT_LOCATION_SOURCE_ID");
+            fillLayer.setProperties(
+                    fillColor(getResources().getColor(R.color.soundcloud_50pct)),
+                    fillOpacity(.3f));
+            style.addLayer(fillLayer);
+
             enableLocationComponent(style);
             mapboxMap.addOnCameraMoveListener(this);
         });
@@ -126,6 +143,14 @@ public class MapActivity
 
             currentLocation = locationComponent.getLastKnownLocation();
             if (currentLocation != null) {
+
+                Polygon polygonArea = TurfTransformation.circle(
+                        locationToPoint(currentLocation), 10000, 360,
+                        TurfConstants.UNIT_METERS);
+                GeoJsonSource polygonCircleSource = style.getSourceAs("CURRENT_LOCATION_SOURCE_ID");
+                polygonCircleSource.setGeoJson(Polygon.fromOuterInner(
+                        LineString.fromLngLats(TurfMeta.coordAll(polygonArea, false))));
+
                 initMarkers(style);
                 moveCameraToMyLocation();
                 locationComponent.addOnIndicatorPositionChangedListener(indicator -> {
@@ -251,6 +276,13 @@ public class MapActivity
                         t.printStackTrace();
                     }
                 });
+    }
+
+    private Point locationToPoint(Location location) {
+        return Point.fromLngLat(
+                location.getLongitude(),
+                location.getLatitude()
+        );
     }
 
     @SuppressLint("SetTextI18n")
