@@ -348,6 +348,14 @@ public class MapActivity
     }
 
     private void postNewMarker(Marker marker) {
+        if (isDebug) {
+            markerList.add(marker);
+            redrawMarkers();
+            Toast.makeText(MapActivity.this, R.string.toast_successful,
+                    Toast.LENGTH_LONG).show();
+            return;
+        }
+
         RetrofitUtils.getRetrofit()
                 .create(DatabaseAPI.class)
                 .newMarker(marker)
