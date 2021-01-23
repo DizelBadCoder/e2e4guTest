@@ -8,4 +8,6 @@
     <string name="dialog_newmarker_title">New marker</string>
     <string name="name">Name</string>
     <string name="color">Color</string>
+    <string name="error_empty_edittext">Error: empty fields</string>
+    <string name="error_not_color">Error: its not color</string>
 </resources>

@@ -1,11 +1,15 @@
 package com.e2e4gu.test.activities;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
+import android.graphics.Color;
 import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -115,8 +119,43 @@ public class MapActivity
         });
     }
 
+    @SuppressLint("SetTextI18n")
     public void addMarker(View view) {
-        Toast.makeText(this, "Developing...", Toast.LENGTH_LONG).show();
+        if (mapboxMap == null) return;
+        LatLng latLng = mapboxMap.getCameraPosition().target;
+        Dialog dialog = new Dialog(this);
+        dialog.setContentView(R.layout.dialog_newmarker);
+        TextView textViewPosition = dialog.findViewById(R.id.textview_position);
+        textViewPosition.setText("Lng: " + latLng.getLongitude() +
+                "\nLat: " + latLng.getLatitude()
+        );
+        TextView textViewError = dialog.findViewById(R.id.textview_error);
+        textViewError.setVisibility(View.INVISIBLE);
+        EditText editTextName = dialog.findViewById(R.id.edittext_name);
+        EditText editTextColor = dialog.findViewById(R.id.edittext_color);
+        Button btnOk = dialog.findViewById(R.id.btn_ok);
+        btnOk.setOnClickListener(v -> {
+            if (editTextName.getText().toString().trim().isEmpty() ||
+                    editTextColor.getText().toString().trim().isEmpty()) {
+                textViewError.setVisibility(View.VISIBLE);
+                textViewError.setText(R.string.error_empty_edittext);
+            } else {
+                try {
+                    String color = editTextColor.getText().toString();
+                    Color.parseColor(color); // check to exception
+                    Marker marker = new Marker(latLng.getLongitude(), latLng.getLatitude());
+                    marker.setColor(color);
+                    marker.setName(editTextName.getText().toString());
+                    postNewMarker(marker);
+                    dialog.cancel();
+                } catch (IllegalArgumentException e) {
+                    textViewError.setVisibility(View.VISIBLE);
+                    textViewError.setText(R.string.error_not_color);
+                    e.printStackTrace();
+                }
+            }
+        });
+        dialog.show();
     }
 
     public void checkMyLocation(View view) {
@@ -279,8 +318,11 @@ public class MapActivity
                         if (response.isSuccessful()) {
                             Toast.makeText(MapActivity.this, R.string.toast_successful,
                                     Toast.LENGTH_LONG).show();
+                        } else {
+                            Toast.makeText(MapActivity.this, "Error :" +
+                                            response.message(),
+                                    Toast.LENGTH_LONG).show();
                         }
-
                     }
 
                     @EverythingIsNonNull

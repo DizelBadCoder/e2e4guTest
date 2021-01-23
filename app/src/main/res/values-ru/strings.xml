@@ -7,4 +7,6 @@
     <string name="dialog_newmarker_title">Новая метка</string>
     <string name="name">Имя</string>
     <string name="color">Цвет</string>
+    <string name="error_empty_edittext">Ошибка: поля незаполнены</string>
+    <string name="error_not_color">Ошибка: неверный цвет</string>
 </resources>
