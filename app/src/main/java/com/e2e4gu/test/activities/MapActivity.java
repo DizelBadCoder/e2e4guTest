@@ -76,6 +76,7 @@ public class MapActivity
     private Location currentLocation;
     private TextView textViewDebug;
     private boolean isDebug = true;
+    private int distanceToMarkers = 10000;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -123,6 +124,10 @@ public class MapActivity
         }
     }
 
+    public void openDialogSettings(View view) {
+
+    }
+
     @SuppressWarnings({"MissingPermission"})
     private void enableLocationComponent(@NonNull Style style) {
         if (PermissionsManager.areLocationPermissionsGranted(this)) {
@@ -150,7 +155,7 @@ public class MapActivity
             if (currentLocation != null) {
 
                 Polygon polygonArea = TurfTransformation.circle(
-                        locationToPoint(currentLocation), 10000, 360,
+                        locationToPoint(currentLocation), distanceToMarkers, 360,
                         TurfConstants.UNIT_METERS);
                 GeoJsonSource polygonCircleSource = style.getSourceAs(CURRENT_LOCATION_SOURCE_ID);
                 polygonCircleSource.setGeoJson(Polygon.fromOuterInner(
@@ -225,7 +230,8 @@ public class MapActivity
                                 Location location = new Location((String) null);
                                 location.setLongitude(it.getLng());
                                 location.setLatitude(it.getLat());
-                                if (currentLocation.distanceTo(location) > 10000) continue;
+                                if (currentLocation.distanceTo(location) > distanceToMarkers)
+                                    continue;
                                 features.add(Feature.fromGeometry(
                                         Point.fromLngLat(it.getLng(), it.getLat())
                                 ));

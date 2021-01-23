@@ -53,9 +53,21 @@
         android:text="Debug Text"
         android:textSize="16sp"
         android:layout_marginTop="50dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="32dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageButton
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:padding="10dp"
+        android:background="#00ffffff"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="32dp"
+        android:scaleType="fitCenter"
+        android:tint="@color/soundcloud_50pct"
+        android:src="@drawable/ic_baseline_settings_24"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

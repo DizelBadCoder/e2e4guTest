@@ -2,4 +2,9 @@
 <resources>
     <string name="splash_loading">Загрузка...</string>
     <string name="toast_successful">Успешно!</string>
+    <string name="dialog_settings_distance">Дистанция</string>
+    <string name="dialog_settings_debug">Режим откладки</string>
+    <string name="dialog_newmarker_title">Новая метка</string>
+    <string name="name">Имя</string>
+    <string name="color">Цвет</string>
 </resources>

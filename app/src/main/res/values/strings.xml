@@ -3,4 +3,9 @@
     <string name="mapbox_access_token" translatable="false">pk.eyJ1IjoiZGl6ZWxiYWRjb2RlciIsImEiOiJja2s1ZzV1amowNTE1MnBuNHV4OHU5YzZqIn0.RpiLSs493CTGEW_2BEhLlA</string>
     <string name="splash_loading">Loading...</string>
     <string name="toast_successful">Successful!</string>
+    <string name="dialog_settings_distance">Distance</string>
+    <string name="dialog_settings_debug">Debug mode</string>
+    <string name="dialog_newmarker_title">New marker</string>
+    <string name="name">Name</string>
+    <string name="color">Color</string>
 </resources>
