@@ -9,7 +9,9 @@ import android.view.View;
 import android.view.Window;
 import android.view.WindowManager;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -71,6 +73,7 @@ public class MapActivity
         extends AppCompatActivity
         implements OnMapReadyCallback, PermissionsListener, MapboxMap.OnCameraMoveListener {
 
+    private final String STYLE_URI = "mapbox://styles/dizelbadcoder/ckk5g8f991k4g17qqdj6bls5q";
     private final String CURRENT_LOCATION_SOURCE_ID = "CURRENT_LOCATION_SOURCE_ID";
     private final String FILL_LAYER_ID = "FILL_LAYER_ID";
     private final String MARKER = "MARKER";
@@ -82,7 +85,7 @@ public class MapActivity
     private MapboxMap mapboxMap;
     private Location currentLocation;
     private TextView textViewDebug;
-    private boolean isDebug = true;
+    private boolean isDebug = false;
     private int distanceToMarkers = 10000;
 
     @Override
@@ -96,6 +99,7 @@ public class MapActivity
         setContentView(R.layout.activity_map);
         mapView = findViewById(R.id.mapView);
         textViewDebug = findViewById(R.id.textViewDebug);
+        textViewDebug.setVisibility(isDebug ? View.VISIBLE : View.INVISIBLE);
         mapView.onCreate(savedInstanceState);
         mapView.getMapAsync(this);
     }
@@ -103,7 +107,6 @@ public class MapActivity
     @Override
     public void onMapReady(@NonNull MapboxMap mapboxMap) {
         this.mapboxMap = mapboxMap;
-        String STYLE_URI = "mapbox://styles/dizelbadcoder/ckk5g8f991k4g17qqdj6bls5q";
         mapboxMap.setStyle(new Style.Builder().fromUri(STYLE_URI), style -> {
             style.addSource(new GeoJsonSource(CURRENT_LOCATION_SOURCE_ID));
 
@@ -167,7 +170,35 @@ public class MapActivity
     }
 
     public void openDialogSettings(View view) {
+        Dialog dialog = new Dialog(this);
 
+        dialog.setContentView(R.layout.dialog_settings);
+        CheckBox checkBoxDebug = dialog.findViewById(R.id.checkbox_debug);
+        TextView textViewDistance = dialog.findViewById(R.id.textview_distance);
+        SeekBar seekBar = dialog.findViewById(R.id.seekbar_distance);
+        Button btnOk = dialog.findViewById(R.id.btn_ok);
+
+        checkBoxDebug.setChecked(isDebug);
+        textViewDistance.setText(String.valueOf(distanceToMarkers));
+        seekBar.setProgress(distanceToMarkers);
+
+        seekBar.setOnSeekBarChangeListener(new SeekBar.OnSeekBarChangeListener() {
+            @Override
+            public void onProgressChanged(SeekBar seekBar, int progress, boolean fromUser) {
+                textViewDistance.setText(String.valueOf(progress));
+            }
+            @Override public void onStartTrackingTouch(SeekBar seekBar) { }
+            @Override public void onStopTrackingTouch(SeekBar seekBar) { }
+        });
+
+        btnOk.setOnClickListener(v -> {
+            isDebug = checkBoxDebug.isChecked();
+            textViewDebug.setVisibility(isDebug ? View.VISIBLE : View.INVISIBLE);
+            distanceToMarkers = seekBar.getProgress();
+            redrawCircle();
+            dialog.cancel();
+        });
+        dialog.show();
     }
 
     @SuppressWarnings({"MissingPermission"})
@@ -195,15 +226,7 @@ public class MapActivity
 
             currentLocation = locationComponent.getLastKnownLocation();
             if (currentLocation != null) {
-
-                Polygon polygonArea = TurfTransformation.circle(
-                        locationToPoint(currentLocation), distanceToMarkers, 360,
-                        TurfConstants.UNIT_METERS);
-                GeoJsonSource polygonCircleSource = style.getSourceAs(CURRENT_LOCATION_SOURCE_ID);
-                polygonCircleSource.setGeoJson(Polygon.fromOuterInner(
-                        LineString.fromLngLats(
-                                TurfMeta.coordAll(polygonArea, false))));
-
+                redrawCircle();
                 initMarkers(style);
                 moveCameraToMyLocation();
                 locationComponent.addOnIndicatorPositionChangedListener(indicator -> {
@@ -306,6 +329,17 @@ public class MapActivity
                 });
     }
 
+    private void redrawCircle() {
+        Polygon polygonArea = TurfTransformation.circle(
+                locationToPoint(currentLocation), distanceToMarkers, 360,
+                TurfConstants.UNIT_METERS);
+        GeoJsonSource polygonCircleSource = mapboxMap.getStyle()
+                .getSourceAs(CURRENT_LOCATION_SOURCE_ID);
+        polygonCircleSource.setGeoJson(Polygon.fromOuterInner(
+                LineString.fromLngLats(
+                        TurfMeta.coordAll(polygonArea, false))));
+    }
+
     private void postNewMarker(Marker marker) {
         RetrofitUtils.getRetrofit()
                 .create(DatabaseAPI.class)
@@ -345,15 +379,13 @@ public class MapActivity
     @SuppressLint("SetTextI18n")
     @Override
     public void onCameraMove() {
-        if (isDebug) {
-            CameraPosition position = mapboxMap.getCameraPosition();
-            textViewDebug.setText("Lng: " + position.target.getLongitude() +
-                    "\nLat: " + position.target.getLatitude() +
-                    "\nZoom: " + position.zoom +
-                    "\nBearing: " + position.bearing +
-                    "\nTilt: " + position.tilt
-            );
-        }
+        CameraPosition position = mapboxMap.getCameraPosition();
+        textViewDebug.setText("Lng: " + position.target.getLongitude() +
+                "\nLat: " + position.target.getLatitude() +
+                "\nZoom: " + position.zoom +
+                "\nBearing: " + position.bearing +
+                "\nTilt: " + position.tilt
+        );
     }
 
     @Override
