@@ -87,6 +87,7 @@ public class MapActivity
     private TextView textViewDebug;
     private boolean isDebug = false;
     private int distanceToMarkers = 10000;
+    private List<Marker> markerList = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -116,6 +117,20 @@ public class MapActivity
                     fillColor(getResources().getColor(R.color.soundcloud_50pct)),
                     fillOpacity(.3f));
             style.addLayer(fillLayer);
+
+            style.addImage(MARKER,
+                    Objects.requireNonNull(ResourcesCompat.getDrawable(
+                            getResources(),
+                            R.drawable.ic_baseline_location_on_24,
+                            null
+                    )));
+            style.addSource(new GeoJsonSource(SOURCE_MARKER));
+            style.addLayer(new SymbolLayer(LAYER_MARKER,
+                    SOURCE_MARKER).withProperties(
+                    iconImage(MARKER),
+                    iconAllowOverlap(true),
+                    iconIgnorePlacement(true),
+                    iconAnchor(ICON_ANCHOR_BOTTOM)));
 
             enableLocationComponent(style);
             mapboxMap.addOnCameraMoveListener(this);
@@ -196,6 +211,7 @@ public class MapActivity
             textViewDebug.setVisibility(isDebug ? View.VISIBLE : View.INVISIBLE);
             distanceToMarkers = seekBar.getProgress();
             redrawCircle();
+            redrawMarkers();
             dialog.cancel();
         });
         dialog.show();
@@ -286,36 +302,12 @@ public class MapActivity
                     @Override
                     public void onResponse(Call<List<Marker>> call,
                                            Response<List<Marker>> response) {
-                        if (response.isSuccessful()) {
-                            if (response.body() == null) return;
-                            List<Marker> markers = response.body();
-                            List<Feature> features = new ArrayList<>();
-
-                            for (Marker it : markers) {
-                                Location location = new Location((String) null);
-                                location.setLongitude(it.getLng());
-                                location.setLatitude(it.getLat());
-                                if (currentLocation.distanceTo(location) > distanceToMarkers)
-                                    continue;
-                                features.add(Feature.fromGeometry(
-                                        Point.fromLngLat(it.getLng(), it.getLat())
-                                ));
-                            }
-
-                            style.addImage(MARKER,
-                                    Objects.requireNonNull(ResourcesCompat.getDrawable(
-                                            getResources(),
-                                            R.drawable.ic_baseline_location_on_24,
-                                            null
-                                    )));
-                            style.addSource(new GeoJsonSource(SOURCE_MARKER,
-                                    FeatureCollection.fromFeatures(features)));
-                            style.addLayer(new SymbolLayer(LAYER_MARKER,
-                                    SOURCE_MARKER).withProperties(
-                                            iconImage(MARKER),
-                                            iconAllowOverlap(true),
-                                            iconIgnorePlacement(true),
-                                            iconAnchor(ICON_ANCHOR_BOTTOM)));
+                        if (response.isSuccessful()){
+                            markerList.addAll(response.body());
+                            redrawMarkers();
+                        } else {
+                            Toast.makeText(MapActivity.this, "Error: " +
+                                    response.message(), Toast.LENGTH_LONG).show();
                         }
                     }
 
@@ -327,6 +319,22 @@ public class MapActivity
                         t.printStackTrace();
                     }
                 });
+    }
+
+    private void redrawMarkers() {
+        List<Feature> features = new ArrayList<>();
+        for (Marker it : markerList) {
+            Location location = new Location((String) null);
+            location.setLongitude(it.getLng());
+            location.setLatitude(it.getLat());
+            if (currentLocation.distanceTo(location) > distanceToMarkers)
+                continue;
+            features.add(Feature.fromGeometry(
+                    Point.fromLngLat(it.getLng(), it.getLat())
+            ));
+        }
+        GeoJsonSource source = mapboxMap.getStyle().getSourceAs(SOURCE_MARKER);
+        source.setGeoJson(FeatureCollection.fromFeatures(features));
     }
 
     private void redrawCircle() {
@@ -350,6 +358,8 @@ public class MapActivity
                     public void onResponse(Call<ResponseBody> call,
                                            Response<ResponseBody> response) {
                         if (response.isSuccessful()) {
+                            markerList.add(marker);
+                            redrawMarkers();
                             Toast.makeText(MapActivity.this, R.string.toast_successful,
                                     Toast.LENGTH_LONG).show();
                         } else {
