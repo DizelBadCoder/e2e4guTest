@@ -406,7 +406,7 @@ public class MapActivity
     public boolean onMapClick(@NonNull LatLng point) {
         List<Feature> features = mapboxMap.queryRenderedFeatures(
                 mapboxMap.getProjection().toScreenLocation(point), LAYER_MARKER);
-        if (features != null) {
+        if (features != null && !features.isEmpty()) {
             Toast.makeText(this, features.get(0).getStringProperty(NAME_PROPERTY),
                     Toast.LENGTH_SHORT).show();
         }
