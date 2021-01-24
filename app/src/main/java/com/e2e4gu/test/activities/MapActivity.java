@@ -70,7 +70,8 @@ import static com.mapbox.mapboxsdk.style.layers.PropertyFactory.iconImage;
 
 public class MapActivity
         extends AppCompatActivity
-        implements OnMapReadyCallback, PermissionsListener, MapboxMap.OnCameraMoveListener {
+        implements OnMapReadyCallback, PermissionsListener,
+        MapboxMap.OnCameraMoveListener, MapboxMap.OnMapClickListener {
 
     private final String STYLE_URI = "mapbox://styles/dizelbadcoder/ckk5g8f991k4g17qqdj6bls5q";
     private final String CURRENT_LOCATION_SOURCE_ID = "CURRENT_LOCATION_SOURCE_ID";
@@ -78,6 +79,7 @@ public class MapActivity
     private final String MARKER = "MARKER";
     private final String SOURCE_MARKER = "SOURCE_MARKER";
     private final String LAYER_MARKER = "LAYER_MARKER";
+    private final String NAME_PROPERTY = "NAME_PROPERTY";
 
     private PermissionsManager permissionsManager;
     private MapView mapView;
@@ -133,6 +135,7 @@ public class MapActivity
 
             enableLocationComponent(style);
             mapboxMap.addOnCameraMoveListener(this);
+            mapboxMap.addOnMapClickListener(this);
         });
     }
 
@@ -319,9 +322,10 @@ public class MapActivity
             location.setLatitude(it.getLat());
             if (currentLocation.distanceTo(location) > distanceToMarkers)
                 continue;
-            features.add(Feature.fromGeometry(
-                    Point.fromLngLat(it.getLng(), it.getLat())
-            ));
+            Feature feature = Feature.fromGeometry(
+                    Point.fromLngLat(it.getLng(), it.getLat()));
+            feature.addStringProperty(NAME_PROPERTY, it.getName());
+            features.add(feature);
         }
         GeoJsonSource source = mapboxMap.getStyle().getSourceAs(SOURCE_MARKER);
         source.setGeoJson(FeatureCollection.fromFeatures(features));
@@ -397,6 +401,18 @@ public class MapActivity
         );
     }
 
+
+    @Override
+    public boolean onMapClick(@NonNull LatLng point) {
+        List<Feature> features = mapboxMap.queryRenderedFeatures(
+                mapboxMap.getProjection().toScreenLocation(point), LAYER_MARKER);
+        if (features != null) {
+            Toast.makeText(this, features.get(0).getStringProperty(NAME_PROPERTY),
+                    Toast.LENGTH_SHORT).show();
+        }
+        return true;
+    }
+
     @Override
     protected void onStart() {
         super.onStart();
@@ -436,6 +452,8 @@ public class MapActivity
     @Override
     protected void onDestroy() {
         super.onDestroy();
+        if (mapboxMap != null)
+            mapboxMap.removeOnMapClickListener(this);
         mapView.onDestroy();
     }
 }
