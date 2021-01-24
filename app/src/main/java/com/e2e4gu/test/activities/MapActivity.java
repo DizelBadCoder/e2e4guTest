@@ -311,6 +311,7 @@ public class MapActivity
     }
 
     private void redrawMarkers() {
+        if (currentLocation == null) return;
         List<Feature> features = new ArrayList<>();
         for (Marker it : markerList) {
             Location location = new Location((String) null);
@@ -327,6 +328,7 @@ public class MapActivity
     }
 
     private void redrawCircle() {
+        if (currentLocation == null) return;
         Polygon polygonArea = TurfTransformation.circle(
                 locationToPoint(currentLocation), distanceToMarkers, 360,
                 TurfConstants.UNIT_METERS);
