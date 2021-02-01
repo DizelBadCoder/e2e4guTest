@@ -240,7 +240,8 @@ public class MapActivity
                 locationComponent.addOnIndicatorPositionChangedListener(indicator -> {
                     //update current position
                     currentLocation = locationComponent.getLastKnownLocation();
-
+                    redrawCircle();
+                    redrawMarkers();
                 });
             }
         } else {
